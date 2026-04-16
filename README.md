@@ -7,138 +7,114 @@ Project ini dibuat sebagai tugas mid semester dan terus dikembangkan menjadi sis
 
 ## 🚀 Teknologi yang Digunakan
 
-- Laravel 11/12/13
-- PHP 8+
-- MySQL / MariaDB
-- Bootstrap 5
-- Blade Template Engine
-- SMTP Gmail
-- Session Authentication
+- Framework: Laravel 11/12/13
+- Language: PHP 8+
+- Database: MySQL / MariaDB
+- Frontend: Bootstrap 5 + Blade Template Engine
+- Service: SMTP Gmail
+- Authentication: Session-based login
 
 ---
 
 ## 📌 Fitur Utama
 
 ### 🔐 Authentication System
+
 - Register user
 - Login & Logout
 - Session-based authentication
 - Password hashing (bcrypt)
 
 ### 📧 Email Verification
-- Email verifikasi saat registrasi
+
+- Verifikasi email saat registrasi
 - Token unik per user
 - Blok login sebelum verifikasi
-- Status user otomatis aktif setelah verifikasi
+- Aktivasi otomatis setelah verifikasi
 
 ### 👤 User Management
-- username
-- email
-- password (hashed)
-- status_login (0/1)
-- verification_token
+
+- Username & Email
+- Password (hashed)
+- Status login (0 / 1)
+- Verification token
 
 ### 🏠 Dashboard
+
 - Dashboard setelah login
-- Proteksi route dengan session
-- Tampilan status user login
+- Proteksi route menggunakan session
+- Menampilkan status user login
 
 ---
 
 ## 🧠 Enhanced Features (Roadmap Upgrade)
 
-### 🔐 Security
+### 🔐 Security System
+
 - Two-Factor Authentication (2FA)
-- Limit login attempt
+- Limit login attempts
 - Account lock system
 - Password strength checker
 - IP login tracking
 
----
-
 ### 👤 User System Advanced
+
 - Role Admin / Guru / Siswa (RBAC)
 - Profile user + foto
 - Activity log user
 - Last login tracking
 - Soft delete user
 
----
-
 ### 🏫 Sistem Akademik
-- CRUD Siswa
-- CRUD Guru
+
+- CRUD Siswa & Guru
 - CRUD Mata Pelajaran
 - CRUD Kelas & Jurusan
-- Tahun ajaran management
+- Manajemen Tahun Ajaran
 
----
+### 📚 Academic Core
 
-### 📚 Akademik Core
 - KRS (Kartu Rencana Studi)
 - KHS (Hasil Studi)
 - Nilai per semester
 - Ranking otomatis
 - Raport PDF generator
 
----
-
 ### 📅 Absensi System
+
 - Absensi harian
 - QR Code absensi
 - Rekap absensi otomatis
-- Status (Hadir/Izin/Sakit/Alpha)
-
----
+- Status: Hadir / Izin / Sakit / Alpha
 
 ### 📊 Reporting System
-- Export PDF laporan
-- Export Excel data
-- Grafik dashboard statistik
-- Laporan nilai per kelas
-- Laporan absensi bulanan
 
----
+- Export PDF & Excel
+- Grafik dashboard statistik
+- Laporan nilai & absensi
 
 ### 📡 API System
-- Laravel REST API
+
+- REST API Laravel
 - Laravel Sanctum authentication
 - JSON response standard
-- API ready for mobile app
-
----
+- Ready untuk mobile app
 
 ### 🎨 UI/UX Upgrade
+
 - Dark mode
 - Responsive admin dashboard
 - Toast notification
 - Loading skeleton
-- Multi-language support (ID/EN)
+- Multi-language (ID / EN)
 
 ---
 
 ## 🏗️ Arsitektur Sistem
 
 ```txt
-Controller
-   ↓
-Service Layer
-   ↓
-Repository Pattern
-   ↓
-Model (Eloquent)
-   ↓
-Database
-🔄 Workflow Sistem
- flowchart LR
-A[User Request] --> B[Middleware]
-B --> C[Controller]
-C --> D[Service Layer]
-D --> E[Repository]
-E --> F[(Database)]
-F --> G[Response Output]
-
-📁 Struktur Project
+Controller ➜ Service Layer ➜ Repository Pattern ➜ Model (Eloquent) ➜ Database
+Struktur Project
 resources/views/
 ├── layouts/
 ├── auth/
@@ -152,6 +128,8 @@ app/Http/Controllers/
 
 database/migrations/
 └── users, sessions, password_reset
+
+
 ⚙️ Instalasi Project
 1. Clone Repository
 git clone https://github.com/username/siakad.git
@@ -162,7 +140,7 @@ npm install
 3. Setup Environment
 cp .env.example .env
 php artisan key:generate
-4. Database Setup
+4. Setup Database
 DB_DATABASE=sistem_informasi_akademik
 DB_USERNAME=root
 DB_PASSWORD=
@@ -175,7 +153,7 @@ MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=yourgmail@gmail.com
-MAIL_PASSWORD=app_password
+MAIL_PASSWORD=your_app_password
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=yourgmail@gmail.com
 MAIL_FROM_NAME="SIAKAD"
@@ -206,17 +184,16 @@ Middleware access control
 REST API
 Mobile integration
 Vue / React support
-🧪 Testing System (Advanced)
+🧪 Testing & Performance
+Testing
 Unit Testing (PHPUnit)
-Feature Testing (Auth & CRUD)
+Feature Testing
 API Testing
-Database Seeder
 Factory Fake Data
-⚡ Performance Upgrade
-Cache system (Redis / file cache)
-Queue jobs (email & report)
+Performance
+Redis Cache
+Queue Jobs (Email, Report)
 Database indexing
-Pagination system
 Lazy loading optimization
 🤝 Kontribusi
 git checkout -b feature/nama-fitur
@@ -224,10 +201,11 @@ git commit -m "feat: tambah fitur"
 git push origin feature/nama-fitur
 👨‍💻 Developer
 
-Project ini dikembangkan sebagai sistem akademik berbasis Laravel yang terus berkembang menuju production-ready system.
+Randi Rana — Full Stack Developer
 
 📌 Status Project
 🟢 Active Development
 🟡 Prototype Stage
 🔵 Academic Project
 🚀 Future SaaS System
+```
