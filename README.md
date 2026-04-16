@@ -1,59 +1,210 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Sistem Informasi Akademik (SIAKAD) — Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Informasi Akademik berbasis web yang dibangun menggunakan **Laravel**.  
+Project ini dibuat sebagai tugas mid dan akan terus dikembangkan secara bertahap setiap bulan.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Teknologi yang Digunakan
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Teknologi | Keterangan |
+|---|---|
+| Laravel 11/12/13 | Framework utama |
+| PHP 8+ | Backend language |
+| MySQL / MariaDB | Database |
+| Bootstrap 5 | Frontend styling |
+| Blade Template Engine | Templating Laravel |
+| SMTP Gmail | Email verification |
+| Session Authentication | Manajemen login |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📌 Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🔐 Authentication System
+- Register user
+- Login & Logout user
+- Session-based login
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📧 Email Verification
+- Kirim email verifikasi saat register
+- Token verifikasi unik per user
+- Status user diperbarui setelah verifikasi
+- Proteksi login sebelum email diverifikasi
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 👤 User Management
 
-## Agentic Development
+| Field | Keterangan |
+|---|---|
+| `username` | Nama pengguna |
+| `email` | Alamat email |
+| `password` | Hashed (bcrypt) |
+| `status_login` | `0` = belum verifikasi, `1` = aktif |
+| `verification_token` | Token unik email verifikasi |
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 🏠 Dashboard
+- Halaman dashboard setelah login berhasil
+- Menampilkan status user yang sedang login
+- Akses terbatas — hanya untuk user yang sudah login
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
+## 📁 Struktur Project
+
+```
+resources/views/
+├── layouts/
+├── auth/
+├── dashboard/
+├── components/
+├── partials/
+└── email/
+
+app/Http/Controllers/
+└── AuthController.php
+
+database/migrations/
+├── users table
+├── sessions
+└── password reset
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## ⚙️ Instalasi Project
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Clone Repository
+```bash
+git clone https://github.com/username/siakad.git
+cd siakad
+```
 
-## Code of Conduct
+### 2. Install Dependency
+```bash
+composer install
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Copy File Environment
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+### 4. Generate Key
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Setup Database
+Edit file `.env`:
+```env
+DB_DATABASE=sistem_informasi_akademik
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## License
+### 6. Jalankan Migration
+```bash
+php artisan migrate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# sia-edu-auth-system
+### 7. Jalankan Server
+```bash
+php artisan serve
+```
+
+---
+
+## 📧 Konfigurasi Email (Gmail SMTP)
+
+Gunakan **App Password** dari akun Gmail kamu:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=yourgmail@gmail.com
+MAIL_PASSWORD=app_password_gmail
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=yourgmail@gmail.com
+MAIL_FROM_NAME="SIAKAD"
+```
+
+> 💡 **Cara membuat App Password Gmail:** Buka [myaccount.google.com](https://myaccount.google.com) → Security → 2-Step Verification → App Passwords.
+
+---
+
+## 🔐 Alur Sistem
+
+### Register
+1. User mengisi form register
+2. Data tersimpan ke database (`status_login = 0`)
+3. Email verifikasi dikirim ke user
+4. User klik link verifikasi di email
+
+### Verifikasi
+1. Token dicek ke database
+2. Jika valid → `status_login` diubah menjadi `1`
+3. User dapat langsung login
+
+### Login
+1. Cek `username` & `password`
+2. Cek status verifikasi email
+3. Jika valid → diarahkan ke dashboard
+
+---
+
+## 🧪 Validasi Sistem
+
+| Kondisi | Hasil |
+|---|---|
+| ❌ Email sudah terdaftar | Error — tidak bisa register ulang |
+| ❌ Password salah | Error — login ditolak |
+| ❌ Belum verifikasi email | Error — login diblokir |
+| ✅ Semua valid | Login sukses → masuk dashboard |
+
+---
+
+## 📅 Roadmap Pengembangan
+
+### 📌 Bulan 1 — *Current*
+- [x] Authentication system
+- [x] Email verification
+- [x] Dashboard basic
+
+### 📌 Bulan 2
+- [ ] CRUD Data Siswa
+- [ ] CRUD Data Guru
+- [ ] CRUD Mata Pelajaran
+
+### 📌 Bulan 3
+- [ ] Absensi siswa
+- [ ] Nilai siswa
+- [ ] Laporan PDF
+
+### 📌 Bulan 4
+- [ ] Role admin / guru / siswa
+- [ ] Middleware role access
+- [ ] UI dashboard admin
+
+### 📌 Bulan 5
+- [ ] API integration
+- [ ] Mobile version *(opsional)*
+- [ ] Laravel API + React/Vue *(opsional)*
+
+---
+
+## 🧑‍💻 Developer Notes
+
+> Project ini masih dalam tahap **pengembangan aktif**.  
+> Struktur dan fitur akan terus diperbaiki untuk menjadi sistem akademik yang lengkap dan fungsional.
+
+---
+
+## 📌 Status Project
+
+| Status | Keterangan |
+|---|---|
+| 🟢 Active Development | Sedang aktif dikembangkan |
+| 🟡 Prototype Stage | Masih tahap prototipe |
+| 🔵 Academic Project | Dibuat untuk keperluan akademik |
