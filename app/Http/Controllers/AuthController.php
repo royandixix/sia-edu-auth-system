@@ -31,7 +31,7 @@ class AuthController extends Controller
         User::create([
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password), // ✅ tetap pakai ini
             'status_login' => 0,
             'verification_token' => $token
         ]);
@@ -48,13 +48,17 @@ class AuthController extends Controller
     public function verify($token)
     {
         $user = User::where('verification_token', $token)->first();
+
         if (!$user) {
             return redirect('/login')->with('error', 'Token tidak valid');
         }
+
         $user->status_login = 1;
         $user->verification_token = null;
         $user->save();
+
         session(['user' => $user->username]);
+
         return redirect('/dashboard')->with('success', 'Verifikasi berhasil, anda langsung login');
     }
 
@@ -65,15 +69,33 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $user = User::where('username', $request->username)->first();
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->with('error', 'Maaf user dan password anda salah');
+        $login = $request->username;
+        $password = $request->password;
+
+        // ✅ bisa login pakai username ATAU email
+        $user = User::where('username', $login)
+            ->orWhere('email', $login)
+            ->first();
+
+        // ❌ user tidak ditemukan
+        if (!$user) {
+            return back()->with('error', 'User tidak ditemukan');
         }
+
+        // ❌ password salah
+        if (!Hash::check($password, $user->password)) {
+            return back()->with('error', 'Password salah');
+        }
+
+        // ❌ belum verifikasi
         if ($user->status_login == 0) {
-            return back()->with('error', 'Maaf user anda belum di verifikasi');
+            return back()->with('error', 'Akun belum diverifikasi');
         }
+
+        // ✅ login sukses
         session(['user' => $user->username]);
-        return redirect('/dashboard')->with('success', 'Selamat anda berhasil login');
+
+        return redirect('/dashboard')->with('success', 'Login berhasil');
     }
 
     public function logout()
@@ -87,6 +109,7 @@ class AuthController extends Controller
         if (!session('user')) {
             return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
         }
+
         return view('dashboard.index');
     }
 }

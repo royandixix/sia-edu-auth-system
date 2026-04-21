@@ -2,35 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-#[Fillable([
-    'username',
-    'email',
-    'password',
-    'status_login',
-    'verification_token',
-    'role'
-])]
-
-#[Hidden([
-    'password'
-])]
 
 class User extends Authenticatable
 {
     use Notifiable;
 
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-            'status_login' => 'boolean',
-        ];
-    }
+    // ✔ gunakan properti biasa (lebih umum & aman)
+    protected $fillable = [
+        'username',
+        'email',
+        'password',
+        'status_login',
+        'verification_token',
+        'role'
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
+
+    protected $casts = [
+        'status_login' => 'boolean',
+    ];
 
     // RELASI
     public function guru()
