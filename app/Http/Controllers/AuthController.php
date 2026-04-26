@@ -18,12 +18,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'username' => 'required|unique:users,username',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6'
-        ], [
-            'email.unique' => 'Email sudah terdaftar',
-            'password.min' => 'Password minimal 6 karakter'
         ]);
 
         $token = Str::random(64);
@@ -31,7 +28,7 @@ class AuthController extends Controller
         User::create([
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // ✅ tetap pakai ini
+            'password' => Hash::make($request->password),
             'status_login' => 0,
             'verification_token' => $token
         ]);
@@ -42,7 +39,7 @@ class AuthController extends Controller
             $message->to($request->email)->subject('Verifikasi Email');
         });
 
-        return back()->with('success', 'Registrasi berhasil, cek email untuk verifikasi!');
+        return back()->with('success', 'Registrasi berhasil, cek email!');
     }
 
     public function verify($token)
@@ -57,9 +54,12 @@ class AuthController extends Controller
         $user->verification_token = null;
         $user->save();
 
-        session(['user' => $user->username]);
+        session([
+            'user_id' => $user->id,
+            'username' => $user->username
+        ]);
 
-        return redirect('/dashboard')->with('success', 'Verifikasi berhasil, anda langsung login');
+        return redirect('/dashboard')->with('success', 'Verifikasi berhasil');
     }
 
     public function showLogin()
@@ -72,44 +72,42 @@ class AuthController extends Controller
         $login = $request->username;
         $password = $request->password;
 
-        // ✅ bisa login pakai username ATAU email
         $user = User::where('username', $login)
             ->orWhere('email', $login)
             ->first();
 
-        // ❌ user tidak ditemukan
         if (!$user) {
             return back()->with('error', 'User tidak ditemukan');
         }
 
-        // ❌ password salah
         if (!Hash::check($password, $user->password)) {
             return back()->with('error', 'Password salah');
         }
 
-        // ❌ belum verifikasi
         if ($user->status_login == 0) {
             return back()->with('error', 'Akun belum diverifikasi');
         }
 
-        // ✅ login sukses
-        session(['user' => $user->username]);
+        session([
+            'user_id' => $user->id,
+            'username' => $user->username
+        ]);
 
         return redirect('/dashboard')->with('success', 'Login berhasil');
     }
 
     public function logout()
     {
-        session()->forget('user');
-        return redirect('/login')->with('success', 'Berhasil logout');
+        session()->flush();
+        return redirect('/login')->with('success', 'Logout berhasil');
     }
 
     public function dashboard()
     {
-        if (!session('user')) {
-            return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
+        if (!session('user_id')) {
+            return redirect('/login')->with('error', 'Silakan login dulu');
         }
 
-        return view('dashboard.index');
+        return view('admin.dashboard.index'); // ✅ FIX DI SINI
     }
 }
