@@ -1,171 +1,231 @@
 @extends('admin.layouts.app')
 
 @section('page-title', 'Dashboard')
-@section('page-sub', 'Ringkasan')
+@section('page-sub', 'Dashboard')
 
 @section('content')
+<div class="space-y-6 max-w-[1600px] mx-auto p-1 animate-fade-in select-none">
 
-{{-- GREETING --}}
-<div style="
-    background: linear-gradient(135deg, #6366F1 0%, #818CF8 50%, #A5B4FC 100%);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    color: #fff;
-    margin-bottom: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-">
-    <div style="position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:rgba(255,255,255,.07);border-radius:50%"></div>
-    <div style="position:absolute;right:70px;bottom:-50px;width:130px;height:130px;background:rgba(255,255,255,.05);border-radius:50%"></div>
-    <div>
-        <h2 style="font-size:18px;font-weight:700;margin-bottom:5px">
-            Selamat datang kembali, {{ session('username') ?? 'Admin' }}! 👋
-        </h2>
-        <p style="font-size:13px;opacity:.8;margin:0">
-            Berikut ringkasan data sistem informasi akademik hari ini
-        </p>
-    </div>
-    <div style="background:rgba(255,255,255,.2);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:12px 20px;text-align:center;z-index:1">
-        <div style="font-size:26px;font-weight:700">96%</div>
-        <div style="font-size:11px;opacity:.8;margin-top:2px">Tingkat kehadiran</div>
-    </div>
-</div>
-
-{{-- KARTU STATISTIK --}}
-<div class="row g-3 mb-4">
-    @php
-    $stats = [
-        ['label' => 'Total Siswa',    'value' => $totalSiswa ?? 120,  'badge' => '↑ 4%', 'color' => '#6366F1', 'bg' => '#EEF0FF',
-         'icon' => '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
-         'grad' => 'linear-gradient(90deg,#6366F1,#818CF8)'],
-        ['label' => 'Total Guru',     'value' => $totalGuru ?? 25,    'badge' => '↑ 2%', 'color' => '#10B981', 'bg' => '#ECFDF5',
-         'icon' => '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-         'grad' => 'linear-gradient(90deg,#10B981,#34D399)'],
-        ['label' => 'Total Kelas',    'value' => $totalKelas ?? 10,   'badge' => '→ 0%', 'color' => '#F59E0B', 'bg' => '#FFFBEB',
-         'icon' => '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
-         'grad' => 'linear-gradient(90deg,#F59E0B,#FCD34D)'],
-        ['label' => 'Mata Pelajaran', 'value' => $totalMapel ?? 15,   'badge' => '↑ 1%', 'color' => '#EF4444', 'bg' => '#FEF2F2',
-         'icon' => '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
-         'grad' => 'linear-gradient(90deg,#EF4444,#F87171)'],
-    ];
-    @endphp
-
-    @foreach($stats as $s)
-    <div class="col-xl-3 col-md-6">
-        <div style="
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform .18s, box-shadow .18s;
-        " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.06)'"
-           onmouseout="this.style.transform='';this.style.boxShadow=''">
-
-            {{-- Garis warna bawah --}}
-            <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:{{ $s['grad'] }};border-radius:0 0 var(--radius) var(--radius)"></div>
-
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <div style="width:38px;height:38px;border-radius:10px;background:{{ $s['bg'] }};display:flex;align-items:center;justify-content:center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ $s['color'] }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        {!! $s['icon'] !!}
-                    </svg>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-2 relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 p-6 md:p-8 text-white shadow-xl border border-white/[0.04] transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-950/20">
+            <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-indigo-500/10 blur-2xl pointer-events-none"></div>
+            <div class="absolute left-1/3 top-0 w-px h-full bg-gradient-to-b from-white/[0.05] via-transparent to-transparent pointer-events-none"></div>
+            
+            <div class="space-y-3 relative z-10">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.06] backdrop-blur-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-[10px] text-slate-300 uppercase tracking-widest font-bold">Sistem Aktif</span>
                 </div>
-                <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:{{ $s['bg'] }};color:{{ $s['color'] }}">
-                    {{ $s['badge'] }}
-                </span>
+                <h2 class="text-xl md:text-3xl font-black tracking-tight text-white leading-tight">
+                    Selamat datang kembali, <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-indigo-300">{{ auth()->user()->username ?? 'Admin' }}</span>
+                </h2>
+                <p class="text-sm text-slate-400 max-w-md font-normal leading-relaxed">
+                    Seluruh modul akademik berjalan optimal. Periksa pembaruan data dan aktivitas log masuk hari ini.
+                </p>
             </div>
 
-            <div style="font-size:28px;font-weight:700;color:var(--text);line-height:1">{{ $s['value'] }}</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:4px">{{ $s['label'] }}</div>
+            <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/[0.06] mt-6 relative z-10">
+                <div class="flex items-center gap-2 text-xs font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded">
+                    TA 2025/2026
+                </div>
+                <span class="text-white/20 text-xs hidden sm:inline">|</span>
+                <div class="text-xs font-semibold text-slate-400 tracking-wide">
+                    Pusat Kendali Administrasi Sekolah
+                </div>
+            </div>
         </div>
-    </div>
-    @endforeach
-</div>
 
-{{-- AKTIVITAS & AKSES CEPAT --}}
-<div class="row g-3">
-
-    {{-- AKTIVITAS TERBARU --}}
-    <div class="col-lg-7">
-        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <span style="font-size:14px;font-weight:700">Aktivitas Terbaru</span>
-                <span style="font-size:11px;color:var(--primary);cursor:pointer;font-weight:500">Lihat semua →</span>
+        <div class="bg-white rounded-xl border border-slate-100 p-6 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-md">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase">Indeks Akademik</h3>
+                    <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+                </div>
+                <p class="text-[11px] text-slate-400 font-medium">Akumulasi nilai ujian & tugas keseluruhan</p>
+                
+                <div class="flex items-baseline gap-2 mt-4 mb-1">
+                    <div class="text-4xl font-black text-slate-900 tracking-tight transition-transform duration-300 group-hover:scale-105">{{ $rataNilaiPersen }}%</div>
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md inline-flex items-center gap-0.5">
+                        <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7 7 7"/></svg>
+                        Efisien
+                    </span>
+                </div>
+                <p class="text-xs font-bold text-slate-500">Rata-rata Nilai Gabungan</p>
             </div>
 
-            @php
-            $activities = [
-                ['ico_bg'=>'#EEF0FF','ico_color'=>'#6366F1','title'=>'Siswa baru didaftarkan','sub'=>'Ahmad Fauzi — Kelas X IPA','time'=>'5 mnt lalu',
-                 'icon'=>'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>'],
-                ['ico_bg'=>'#ECFDF5','ico_color'=>'#10B981','title'=>'Absensi diperbarui','sub'=>'Kelas XI IPS — Senin pagi','time'=>'20 mnt lalu',
-                 'icon'=>'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'],
-                ['ico_bg'=>'#FFFBEB','ico_color'=>'#F59E0B','title'=>'Nilai UTS diinput','sub'=>'Matematika — Kelas XII','time'=>'1 jam lalu',
-                 'icon'=>'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>'],
-                ['ico_bg'=>'#FEF2F2','ico_color'=>'#EF4444','title'=>'Jadwal diperbarui','sub'=>'Semester Genap 2025/2026','time'=>'3 jam lalu',
-                 'icon'=>'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'],
-            ];
-            @endphp
-
-            @foreach($activities as $i => $act)
-            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;{{ $i < count($activities)-1 ? 'border-bottom:1px solid var(--border)' : '' }}">
-                <div style="width:34px;height:34px;border-radius:9px;background:{{ $act['ico_bg'] }};display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ $act['ico_color'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        {!! $act['icon'] !!}
-                    </svg>
+            <div class="space-y-2 pt-4 border-t border-slate-50 mt-4">
+                <div class="flex items-center justify-between text-xs font-bold">
+                    <span class="text-slate-400 font-medium">Batas Ketuntasan</span>
+                    <span class="text-slate-800">Kapasitas {{ min($rataNilaiPersen, 100) }}%</span>
                 </div>
-                <div style="flex:1">
-                    <div style="font-size:12px;font-weight:600;color:var(--text)">{{ $act['title'] }}</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px">{{ $act['sub'] }}</div>
+                <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-slate-900 rounded-full transition-all duration-700 ease-out shadow-[0_0_8px_rgba(15,23,42,0.2)]" style="width: {{ min($rataNilaiPersen, 100) }}%"></div>
                 </div>
-                <div style="font-size:10px;color:var(--muted);flex-shrink:0">{{ $act['time'] }}</div>
             </div>
-            @endforeach
         </div>
+
     </div>
 
-    {{-- AKSES CEPAT --}}
-    <div class="col-lg-5">
-        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-            <div style="font-size:14px;font-weight:700;margin-bottom:16px">Akses Cepat</div>
-            <div class="row g-2">
-                @php
-                $quick = [
-                    ['label'=>'Tambah Siswa',  'sub'=>'Daftarkan siswa baru', 'bg'=>'#EEF0FF','color'=>'#6366F1',
-                     'icon'=>'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>'],
-                    ['label'=>'Input Absensi', 'sub'=>'Rekam kehadiran',     'bg'=>'#ECFDF5','color'=>'#10B981',
-                     'icon'=>'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'],
-                    ['label'=>'Input Nilai',   'sub'=>'Masukkan nilai ujian', 'bg'=>'#FFFBEB','color'=>'#F59E0B',
-                     'icon'=>'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>'],
-                    ['label'=>'Atur Jadwal',   'sub'=>'Kelola jadwal kelas',  'bg'=>'#FEF2F2','color'=>'#EF4444',
-                     'icon'=>'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'],
-                ];
-                @endphp
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        @php
+        $cards = [
+            [
+                'label' => 'Total Siswa',
+                'value' => $totalSiswa,
+                'sub' => 'Siswa terregistrasi',
+                'bg_ico' => 'bg-slate-950 text-white shadow-md shadow-slate-950/10',
+                'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>',
+            ],
+            [
+                'label' => 'Total Guru',
+                'value' => $totalGuru,
+                'sub' => 'Tenaga pendidik aktif',
+                'bg_ico' => 'bg-indigo-600 text-white shadow-md shadow-indigo-600/10',
+                'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3L1 9l11 6 11-6-11-6z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 12v5c0 1.1 3.1 2 7 2s7-.9 7-2v-5"/>',
+            ],
+            [
+                'label' => 'Total Kelas',
+                'value' => $totalKelas,
+                'sub' => 'Manajemen ruangan',
+                'bg_ico' => 'bg-emerald-600 text-white shadow-md shadow-emerald-600/10',
+                'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>',
+            ],
+            [
+                'label' => 'Mata Pelajaran',
+                'value' => $totalMapel,
+                'sub' => 'Kurikulum tersedia',
+                'bg_ico' => 'bg-violet-600 text-white shadow-md shadow-violet-600/10',
+                'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 19.5A2.5 2.5 0 016.5 17H20V5H6.5A2.5 2.5 0 004 7.5v12z"/>',
+            ],
+        ];
+        @endphp
 
-                @foreach($quick as $q)
-                <div class="col-6">
-                    <div style="background:#F7F8FA;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:all .15s"
-                         onmouseover="this.style.background='{{ $q['bg'] }}';this.style.borderColor='rgba(0,0,0,.08)'"
-                         onmouseout="this.style.background='#F7F8FA';this.style.borderColor='var(--border)'">
-                        <div style="width:34px;height:34px;border-radius:8px;background:{{ $q['bg'] }};display:flex;align-items:center;justify-content:center;margin-bottom:8px">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ $q['color'] }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                {!! $q['icon'] !!}
-                            </svg>
-                        </div>
-                        <div style="font-size:12px;font-weight:600;color:var(--text)">{{ $q['label'] }}</div>
-                        <div style="font-size:10px;color:var(--muted);margin-top:2px">{{ $q['sub'] }}</div>
+        @foreach($cards as $c)
+        <div class="group bg-white rounded-xl border border-slate-100 p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-center justify-between">
+            <div class="space-y-1 min-w-0">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ $c['label'] }}</p>
+                <div class="text-3xl font-black text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">{{ $c['value'] }}</div>
+                <p class="text-[11px] text-slate-400 font-medium truncate">{{ $c['sub'] }}</p>
+            </div>
+            <div class="w-11 h-11 rounded-lg {{ $c['bg_ico'] }} flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    {!! $c['icon'] !!}
+                </svg>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-100 p-6 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-md">
+            <div>
+                <div class="flex items-center justify-between border-b border-slate-50 pb-4 mb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 tracking-tight uppercase">Log Aktivitas Terbaru</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Sinkronisasi data real-time entri akademis</p>
                     </div>
                 </div>
-                @endforeach
+
+                <div class="divide-y divide-slate-50">
+                    @forelse($activities as $a)
+                    <div class="flex items-start gap-4 py-3.5 first:pt-1 last:pb-1 group transition-all duration-200 hover:bg-slate-50/50 -mx-2 px-2 rounded-md">
+                        <div class="w-9 h-9 rounded-lg {{ $a['bg'] ?? 'bg-slate-100 text-slate-700' }} flex items-center justify-center shrink-0 shadow-inner">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">{!! $a['icon'] !!}</svg>
+                        </div>
+                        <div class="flex-1 min-w-0 space-y-0.5">
+                            <div class="flex items-center justify-between gap-4">
+                                <div class="text-xs font-bold text-slate-800 truncate group-hover:text-indigo-600 transition-colors tracking-wide">{{ $a['title'] }}</div>
+                                <span class="text-[9px] font-bold text-slate-400 whitespace-nowrap bg-slate-100 px-2 py-0.5 rounded">{{ $a['time'] }}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500 truncate font-normal">{{ $a['sub'] }}</div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="text-center py-10 text-xs font-bold text-slate-400 tracking-wide">Belum ada pembaruan log masuk terdeteksi.</div>
+                    @endforelse
+                </div>
             </div>
         </div>
-    </div>
 
+        <div class="bg-white rounded-xl border border-slate-100 p-6 shadow-sm flex flex-col gap-6 justify-between transition-all duration-300 hover:shadow-md">
+            <div>
+                <div class="mb-5">
+                    <h3 class="text-sm font-bold text-slate-900 tracking-tight uppercase">Akses Pintasan</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Navigasi instan menuju entri form operasional</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="{{ route('admin.siswa.index') }}"
+                       class="group flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 hover:bg-slate-900 text-center transition-all duration-300 shadow-sm border border-slate-100/50">
+                        <div class="w-10 h-10 rounded-md bg-white text-slate-900 flex items-center justify-center group-hover:scale-90 group-hover:bg-white/10 group-hover:text-white transition-all mb-2 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-slate-700 group-hover:text-white transition-colors">Siswa Baru</span>
+                    </a>
+
+                    <a href="{{ route('admin.absensi.index') }}"
+                       class="group flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 hover:bg-indigo-600 text-center transition-all duration-300 shadow-sm border border-slate-100/50">
+                        <div class="w-10 h-10 rounded-md bg-white text-indigo-600 flex items-center justify-center group-hover:scale-90 group-hover:bg-white/10 group-hover:text-white transition-all mb-2 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-slate-700 group-hover:text-white transition-colors">Isi Presensi</span>
+                    </a>
+
+                    <a href="{{ route('admin.nilai.index') }}"
+                       class="group flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 hover:bg-emerald-600 text-center transition-all duration-300 shadow-sm border border-slate-100/50">
+                        <div class="w-10 h-10 rounded-md bg-white text-emerald-600 flex items-center justify-center group-hover:scale-90 group-hover:bg-white/10 group-hover:text-white transition-all mb-2 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-slate-700 group-hover:text-white transition-colors">Input Nilai</span>
+                    </a>
+
+                    <a href="{{ route('admin.jadwal.index') }}"
+                       class="group flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 hover:bg-violet-600 text-center transition-all duration-300 shadow-sm border border-slate-100/50">
+                        <div class="w-10 h-10 rounded-md bg-white text-violet-600 flex items-center justify-center group-hover:scale-90 group-hover:bg-white/10 group-hover:text-white transition-all mb-2 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/>
+                                <path stroke-linecap="round" stroke-width="2" d="M16 2v4M8 2v4M3 10h18"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-slate-700 group-hover:text-white transition-colors">Atur Jadwal</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 mt-2">
+                <h4 class="text-[10px] font-black text-slate-400 mb-3 tracking-widest uppercase">Statistik Kehadiran Harian</h4>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1.5 font-bold">
+                            <span class="text-slate-400 font-medium">Rasio Presensi</span>
+                            <span class="text-slate-900">{{ $persentaseKehadiran }}%</span>
+                        </div>
+                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-slate-900 rounded-full transition-all duration-500" style="width: {{ $persentaseKehadiran }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>
 @endsection

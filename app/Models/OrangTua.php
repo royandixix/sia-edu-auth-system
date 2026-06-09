@@ -15,13 +15,15 @@ class OrangTua extends Model
         'user_id'
     ];
 
-    public function siswa()
-    {
-        return $this->belongsTo(Siswa::class);
-    }
-
+    // login parent
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // 1 orang tua = 1 siswa (sesuai DB kamu)
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class, 'siswa_id');
     }
 }

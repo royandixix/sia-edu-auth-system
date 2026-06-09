@@ -9,7 +9,6 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    // ✔ gunakan properti biasa (lebih umum & aman)
     protected $fillable = [
         'username',
         'email',
@@ -19,27 +18,20 @@ class User extends Authenticatable
         'role'
     ];
 
-    protected $hidden = [
-        'password',
-    ];
+    protected $hidden = ['password'];
 
     protected $casts = [
         'status_login' => 'boolean',
     ];
 
     // RELASI
-    public function guru()
+    public function orangTua()
     {
-        return $this->hasOne(Guru::class);
+        return $this->hasOne(OrangTua::class);
     }
 
     public function siswa()
     {
         return $this->hasOne(Siswa::class);
-    }
-
-    public function orangTua()
-    {
-        return $this->hasOne(OrangTua::class);
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -20,7 +21,8 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|unique:users,username',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:8',
+            'role' => 'required'
         ]);
 
         $token = Str::random(64);
@@ -29,6 +31,7 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
             'status_login' => 0,
             'verification_token' => $token
         ]);
@@ -36,7 +39,8 @@ class AuthController extends Controller
         $link = url('/verify/' . $token);
 
         Mail::send('email.verify', ['link' => $link], function ($message) use ($request) {
-            $message->to($request->email)->subject('Verifikasi Email');
+            $message->to($request->email)
+                ->subject('Verifikasi Email');
         });
 
         return back()->with('success', 'Registrasi berhasil, cek email!');
@@ -50,16 +54,20 @@ class AuthController extends Controller
             return redirect('/login')->with('error', 'Token tidak valid');
         }
 
-        $user->status_login = 1;
-        $user->verification_token = null;
-        $user->save();
+        $user->update([
+            'status_login' => 1,
+            'verification_token' => null
+        ]);
+
+        session()->regenerate();
 
         session([
             'user_id' => $user->id,
-            'username' => $user->username
+            'username' => $user->username,
+            'role' => $user->role
         ]);
 
-        return redirect('/dashboard')->with('success', 'Verifikasi berhasil');
+        return $this->redirectByRole($user->role);
     }
 
     public function showLogin()
@@ -69,18 +77,20 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $login = $request->username;
-        $password = $request->password;
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
 
-        $user = User::where('username', $login)
-            ->orWhere('email', $login)
+        $user = User::where('username', $request->username)
+            ->orWhere('email', $request->username)
             ->first();
 
         if (!$user) {
             return back()->with('error', 'User tidak ditemukan');
         }
 
-        if (!Hash::check($password, $user->password)) {
+        if (!Hash::check($request->password, $user->password)) {
             return back()->with('error', 'Password salah');
         }
 
@@ -88,26 +98,33 @@ class AuthController extends Controller
             return back()->with('error', 'Akun belum diverifikasi');
         }
 
+        session()->regenerate();
+
         session([
             'user_id' => $user->id,
-            'username' => $user->username
+            'username' => $user->username,
+            'role' => $user->role
         ]);
 
-        return redirect('/dashboard')->with('success', 'Login berhasil');
+        return $this->redirectByRole($user->role);
     }
 
     public function logout()
     {
         session()->flush();
+
         return redirect('/login')->with('success', 'Logout berhasil');
     }
 
-    public function dashboard()
+    private function redirectByRole($role)
     {
-        if (!session('user_id')) {
-            return redirect('/login')->with('error', 'Silakan login dulu');
-        }
-
-        return view('admin.dashboard.index'); // ✅ FIX DI SINI
+        return match ($role) {
+            'admin' => redirect('/admin/dashboard'),
+            'guru' => redirect('/guru/dashboard'),
+            'siswa' => redirect('/siswa/dashboard'),
+            'orang_tua' => redirect('/orangtua/dashboard'),
+            'kepsek' => redirect('/kepsek/dashboard'),
+            default => redirect('/login')
+        };
     }
 }

@@ -8,10 +8,19 @@ class Kelas extends Model
 {
     protected $table = 'kelas';
 
-    protected $fillable = ['nama_kelas', 'wali_kelas'];
+    protected $fillable = [
+        'nama_kelas',
+        'wali_kelas'
+    ];
 
     public function siswa()
     {
         return $this->hasMany(Siswa::class);
+    }
+
+    // 🔥 RELASI WALI KELAS (GURU)
+    public function wali()
+    {
+        return $this->belongsTo(Guru::class, 'wali_kelas');
     }
 }

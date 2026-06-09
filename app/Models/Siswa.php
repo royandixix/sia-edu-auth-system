@@ -14,21 +14,25 @@ class Siswa extends Model
         'jk',
         'alamat',
         'kelas_id',
-        'user_id'
+        'user_id',
+        'status'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
+    // kelas
     public function kelas()
     {
         return $this->belongsTo(Kelas::class);
     }
 
+    // nilai
     public function nilai()
     {
-        return $this->hasMany(Nilai::class);
+        return $this->hasMany(Nilai::class, 'siswa_id');
+    }
+
+    // orang tua (optional reverse)
+    public function orangTua()
+    {
+        return $this->hasOne(OrangTua::class, 'siswa_id');
     }
 }

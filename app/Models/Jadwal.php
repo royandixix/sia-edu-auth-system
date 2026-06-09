@@ -11,12 +11,11 @@ class Jadwal extends Model
     protected $fillable = [
         'kelas_id',
         'mapel_id',
+        'guru_id',   // 🔥 TAMBAH INI
         'hari',
         'jam_mulai',
         'jam_selesai'
     ];
-
-    // RELASI
 
     public function kelas()
     {
@@ -26,5 +25,11 @@ class Jadwal extends Model
     public function mapel()
     {
         return $this->belongsTo(MataPelajaran::class, 'mapel_id');
+    }
+
+    // 🔥 TAMBAH RELASI INI
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class, 'guru_id');
     }
 }
