@@ -14,28 +14,37 @@ class LaporanController extends Controller
 {
     private function data()
     {
-        return [
-            'totalSiswa' => Siswa::count(),
-            'totalGuru' => Guru::count(),
-            'totalKelas' => Kelas::count(),
-            'totalMapel' => MataPelajaran::count(),
-            'totalAbsensi' => Absensi::count(),
-            'totalNilai' => Nilai::count(),
+        $totalSiswa = Siswa::count();
+        $totalGuru = Guru::count();
+        $totalKelas = Kelas::count();
+        $totalMapel = MataPelajaran::count();
+        $totalAbsensi = Absensi::count();
+        $totalNilai = Nilai::count();
 
-            'rataNilaiPersen' => Nilai::count()
-                ? round(
-                    (
-                        Nilai::sum('nilai_tugas') +
-                        Nilai::sum('nilai_uts') +
-                        Nilai::sum('nilai_uas')
-                    ) / (Nilai::count() * 3),
-                2)
-                : 0,
+        if ($totalNilai > 0) {
+            $rataNilaiPersen = round(
+                (
+                    Nilai::sum('nilai_tugas') +
+                    Nilai::sum('nilai_uts') +
+                    Nilai::sum('nilai_uas')
+                ) / ($totalNilai * 3),
+            2);
+        } else {
+            $rataNilaiPersen = 0;
+        }
 
-            'persentaseKehadiran' => Absensi::count()
-                ? 100
-                : 0,
-        ];
+        $persentaseKehadiran = $totalAbsensi > 0 ? 100 : 0;
+
+        return compact(
+            'totalSiswa',
+            'totalGuru',
+            'totalKelas',
+            'totalMapel',
+            'totalAbsensi',
+            'totalNilai',
+            'rataNilaiPersen',
+            'persentaseKehadiran'
+        );
     }
 
     public function index()

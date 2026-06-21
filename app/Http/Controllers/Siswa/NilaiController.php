@@ -11,19 +11,13 @@ class NilaiController extends Controller
 {
     public function index()
     {
-        $userId = session('user_id'); // masih boleh, tapi lebih aman Auth
+        $siswa = Siswa::where('user_id', auth()->id())->first();
 
-        $siswa = Siswa::with('kelas')
-            ->where('user_id', $userId)
-            ->first();
-
-        $nilai = collect();
-
-        if ($siswa) {
-            $nilai = Nilai::with('mapel')
+        $nilai = $siswa
+            ? Nilai::with('mapel')
                 ->where('siswa_id', $siswa->id)
-                ->get();
-        }
+                ->get()
+            : collect();
 
         return view('siswa.nilai.index', compact('siswa', 'nilai'));
     }

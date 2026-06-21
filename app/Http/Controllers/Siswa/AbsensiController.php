@@ -10,18 +10,14 @@ class AbsensiController extends Controller
 {
     public function index()
     {
-        $userId = session('user_id');
-
         $siswa = Siswa::with('kelas')
-            ->where('user_id', $userId)
+            ->where('user_id', auth()->id())
             ->first();
 
-        $absensi = collect();
+        $absensi = $siswa
+            ? Absensi::where('siswa_id', $siswa->id)->get()
+            : collect();
 
-        if ($siswa) {
-            $absensi = Absensi::where('siswa_id', $siswa->id)->get();
-        }
-
-        return view('siswa.absensi.index', compact('siswa','absensi'));
+        return view('siswa.absensi.index', compact('siswa', 'absensi'));
     }
 }

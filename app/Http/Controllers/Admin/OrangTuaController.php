@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\OrangTua;
 use App\Models\Siswa;
+use Illuminate\Support\Facades\Auth;
 
 class OrangTuaController extends Controller
 {
@@ -24,22 +25,22 @@ class OrangTuaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
-            'no_hp' => 'required',
-            'siswa_id' => 'required',
+            'nama' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+            'siswa_id' => 'required|exists:siswa,id',
         ]);
 
-        $userId = session('user_id');
-
-        if (!$userId) {
-            return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
+        // pastikan user login
+        if (!Auth::check()) {
+            return redirect()->route('login')
+                ->with('error', 'Silakan login terlebih dahulu');
         }
 
         OrangTua::create([
             'nama' => $request->nama,
             'no_hp' => $request->no_hp,
             'siswa_id' => $request->siswa_id,
-            'user_id' => $userId,
+            'user_id' => Auth::id(),
         ]);
 
         return redirect()->route('admin.orangtua.index')
@@ -65,9 +66,9 @@ class OrangTuaController extends Controller
         $orangtua = OrangTua::findOrFail($id);
 
         $request->validate([
-            'nama' => 'required',
-            'no_hp' => 'required',
-            'siswa_id' => 'required',
+            'nama' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+            'siswa_id' => 'required|exists:siswa,id',
         ]);
 
         $orangtua->update([
@@ -77,7 +78,7 @@ class OrangTuaController extends Controller
         ]);
 
         return redirect()->route('admin.orangtua.index')
-            ->with('success', 'Data berhasil diupdate');
+            ->with('success', 'Data orang tua berhasil diupdate');
     }
 
     public function destroy($id)
@@ -86,6 +87,8 @@ class OrangTuaController extends Controller
         $orangtua->delete();
 
         return redirect()->route('admin.orangtua.index')
-            ->with('success', 'Data berhasil dihapus');
+            ->with('success', 'Data orang tua berhasil dihapus');
     }
+
+    
 }

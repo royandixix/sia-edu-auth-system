@@ -17,8 +17,9 @@
 {{-- INFO SISWA --}}
 <div class="bg-white border border-gray-100 rounded-2xl p-5 mb-6">
     <p class="text-sm text-gray-500">Nama Siswa</p>
+
     <h2 class="text-xl font-bold text-gray-900">
-        {{ $siswaAktif->nama_siswa ?? '-' }}
+        {{ $siswa->nama_siswa ?? '-' }}
     </h2>
 </div>
 

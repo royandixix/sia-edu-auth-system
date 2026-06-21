@@ -84,7 +84,8 @@
                                     Edit
                                 </a>
 
-                                <form action="{{ route('admin.jadwal.destroy', $j->id) }}" method="POST"
+                                <form action="{{ route('admin.jadwal.destroy', $j->id) }}"
+                                      method="POST"
                                       class="inline"
                                       onsubmit="return confirm('Hapus jadwal ini?')">
                                     @csrf

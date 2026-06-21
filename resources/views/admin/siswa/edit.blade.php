@@ -59,7 +59,7 @@
                     </select>
                 </div>
 
-                {{-- Kelas --}}
+                {{-- KELAS --}}
                 <div>
                     <label class="text-sm text-gray-600">Kelas</label>
                     <select name="kelas_id"
@@ -75,7 +75,7 @@
                     </select>
                 </div>
 
-                {{-- Alamat --}}
+                {{-- ALAMAT --}}
                 <div class="md:col-span-2">
                     <label class="text-sm text-gray-600">Alamat</label>
                     <input type="text" name="alamat"
@@ -84,7 +84,7 @@
                         placeholder="Alamat lengkap">
                 </div>
 
-                {{-- Status --}}
+                {{-- STATUS --}}
                 <div>
                     <label class="text-sm text-gray-600">Status</label>
                     <select name="status"
@@ -101,13 +101,30 @@
                     </select>
                 </div>
 
+                {{-- EMAIL LOGIN --}}
+                <div>
+                    <label class="text-sm text-gray-600">Email Login</label>
+                    <input type="email" name="email"
+                        value="{{ $siswa->user->email ?? '' }}"
+                        class="mt-1 w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        placeholder="Email login siswa">
+                </div>
+
+                {{-- PASSWORD --}}
+                <div class="md:col-span-2">
+                    <label class="text-sm text-gray-600">Password Baru (opsional)</label>
+                    <input type="password" name="password"
+                        class="mt-1 w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        placeholder="Kosongkan jika tidak diubah">
+                </div>
+
             </div>
 
             {{-- BUTTON --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
 
                 <a href="{{ route('admin.siswa.index') }}"
-                   class="px-4 py-2 border rounded-xl text-gray-600 hover:bg-gray-50">
+                    class="px-4 py-2 border rounded-xl text-gray-600 hover:bg-gray-50">
                     Batal
                 </a>
 

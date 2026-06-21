@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Str;
+use App\Models\Siswa;
+use App\Models\Guru;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -19,31 +23,74 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|unique:users,username',
-            'email' => 'required|email|unique:users,email',
+            'name' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
-            'role' => 'required'
+            'role' => 'required|in:admin,guru,siswa,orang_tua,kepala_sekolah',
+            'nik' => 'required_if:role,guru',
+            'nisn' => 'required_if:role,siswa',
         ]);
 
-        $token = Str::random(64);
+        DB::beginTransaction();
 
-        User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'status_login' => 0,
-            'verification_token' => $token
-        ]);
+        try {
 
-        $link = url('/verify/' . $token);
+            $token = Str::random(64);
 
-        Mail::send('email.verify', ['link' => $link], function ($message) use ($request) {
-            $message->to($request->email)
-                ->subject('Verifikasi Email');
-        });
+            // 1. CREATE USER
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+                'status_login' => false,
+                'verification_token' => $token,
+            ]);
 
-        return back()->with('success', 'Registrasi berhasil, cek email!');
+            // 2. AUTO INSERT KE TABLE SESUAI ROLE
+            if ($request->role === 'siswa') {
+                Siswa::create([
+                    'nis' => $request->nisn,
+                    'nama_siswa' => $request->name,
+                    'jk' => 'L',
+                    'alamat' => '-',
+                    'kelas_id' => 1,
+                    'user_id' => $user->id,
+                ]);
+            }
+
+            if ($request->role === 'guru') {
+                Guru::create([
+                    'nip' => $request->nik,
+                    'nama_guru' => $request->name,
+                    'alamat' => '-',
+                    'jk' => 'L',
+                    'user_id' => $user->id,
+                ]);
+            }
+
+            // 3. EMAIL VERIFIKASI (FIX DI SINI)
+            $link = config('app.url') . "/verify/$token";
+
+            Mail::raw("Klik link ini untuk verifikasi akun:\n$link", function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Verifikasi Akun SIAKAD')
+                    ->from(config('mail.from.address'), config('mail.from.name'));
+            });
+
+            DB::commit();
+
+            return redirect()->route('login')
+                ->with('success', 'Registrasi berhasil. Cek email untuk verifikasi.');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', 'Registrasi gagal: ' . $e->getMessage());
+        }
     }
 
     public function verify($token)
@@ -51,23 +98,22 @@ class AuthController extends Controller
         $user = User::where('verification_token', $token)->first();
 
         if (!$user) {
-            return redirect('/login')->with('error', 'Token tidak valid');
+            return redirect('/login')->with('error', 'Link tidak valid');
+        }
+
+        if ($user->status_login) {
+            return redirect('/login')->with('success', 'Sudah diverifikasi');
         }
 
         $user->update([
-            'status_login' => 1,
-            'verification_token' => null
+            'status_login' => true,
+            'verification_token' => null,
         ]);
 
-        session()->regenerate();
+        Auth::login($user);
+        request()->session()->regenerate();
 
-        session([
-            'user_id' => $user->id,
-            'username' => $user->username,
-            'role' => $user->role
-        ]);
-
-        return $this->redirectByRole($user->role);
+        return redirect($this->redirectByRole($user->role));
     }
 
     public function showLogin()
@@ -79,11 +125,13 @@ class AuthController extends Controller
     {
         $request->validate([
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        $user = User::where('username', $request->username)
-            ->orWhere('email', $request->username)
+        $user = User::where(function ($q) use ($request) {
+                $q->where('username', $request->username)
+                  ->orWhere('email', $request->username);
+            })
             ->first();
 
         if (!$user) {
@@ -94,37 +142,34 @@ class AuthController extends Controller
             return back()->with('error', 'Password salah');
         }
 
-        if ($user->status_login == 0) {
-            return back()->with('error', 'Akun belum diverifikasi');
+        if (!$user->status_login) {
+            return back()->with('error', 'Belum verifikasi email');
         }
 
-        session()->regenerate();
+        Auth::login($user);
+        $request->session()->regenerate();
 
-        session([
-            'user_id' => $user->id,
-            'username' => $user->username,
-            'role' => $user->role
-        ]);
-
-        return $this->redirectByRole($user->role);
+        return redirect($this->redirectByRole($user->role));
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->flush();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success', 'Logout berhasil');
+        return redirect()->route('login');
     }
 
     private function redirectByRole($role)
     {
         return match ($role) {
-            'admin' => redirect('/admin/dashboard'),
-            'guru' => redirect('/guru/dashboard'),
-            'siswa' => redirect('/siswa/dashboard'),
-            'orang_tua' => redirect('/orangtua/dashboard'),
-            'kepsek' => redirect('/kepsek/dashboard'),
-            default => redirect('/login')
+            'admin' => '/admin/dashboard',
+            'guru' => '/guru/dashboard',
+            'siswa' => '/siswa/dashboard',
+            'orang_tua' => '/orangtua/dashboard',
+            'kepala_sekolah' => '/kepsek/dashboard',
+            default => '/login',
         };
     }
 }

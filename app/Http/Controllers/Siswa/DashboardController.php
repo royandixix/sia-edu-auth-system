@@ -8,34 +8,25 @@ use App\Models\Nilai;
 use App\Models\Absensi;
 use App\Models\Jadwal;
 use App\Models\Pengumuman;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = session('user_id');
-
         $siswa = Siswa::with('kelas')
-            ->where('user_id', $userId)
+            ->where('user_id', auth()->id())
             ->first();
-
-        if (!$siswa) {
-            return view('siswa.dashboard.index', [
-                'siswa' => null,
-                'nilai' => collect(),
-                'absensi' => collect(),
-                'jadwal' => collect(),
-                'pengumuman' => collect(),
-            ]);
-        }
 
         return view('siswa.dashboard.index', [
             'siswa' => $siswa,
-            'nilai' => Nilai::where('siswa_id', $siswa->id)->get(),
-            'absensi' => Absensi::where('siswa_id', $siswa->id)->get(),
-            'jadwal' => Jadwal::with(['mapel','guru'])
-                ->where('kelas_id', $siswa->kelas_id)
-                ->get(),
+            'nilai' => $siswa ? Nilai::where('siswa_id', $siswa->id)->get() : collect(),
+            'absensi' => $siswa ? Absensi::where('siswa_id', $siswa->id)->get() : collect(),
+            'jadwal' => $siswa
+                ? Jadwal::with(['mapel','guru'])
+                    ->where('kelas_id', $siswa->kelas_id)
+                    ->get()
+                : collect(),
             'pengumuman' => Pengumuman::latest()->get(),
         ]);
     }

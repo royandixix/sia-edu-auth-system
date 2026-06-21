@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Siswa;
 
 class OrangTua extends Model
 {
@@ -15,15 +17,14 @@ class OrangTua extends Model
         'user_id'
     ];
 
-    // login parent
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    // 1 orang tua = 1 siswa (sesuai DB kamu)
+    // 🔥 FIX PENTING: pakai foreign key jelas
     public function siswa()
     {
-        return $this->belongsTo(Siswa::class, 'siswa_id');
+        return $this->belongsTo(Siswa::class, 'siswa_id', 'id');
     }
 }

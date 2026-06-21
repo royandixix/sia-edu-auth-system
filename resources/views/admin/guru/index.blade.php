@@ -36,7 +36,7 @@
                     <tr>
                         <th class="text-left px-6 py-4">Nama</th>
                         <th class="text-left px-6 py-4">NIP</th>
-                        <th class="text-left px-6 py-4">Mapel</th>
+                        {{-- <th class="text-left px-6 py-4">Mapel</th> --}}
                         <th class="text-left px-6 py-4">Jenis Kelamin</th>
                         <th class="text-right px-6 py-4">Aksi</th>
                     </tr>
@@ -72,11 +72,11 @@
                         </td>
 
                         {{-- MAPEL --}}
-                        <td class="px-6 py-4">
+                        {{-- <td class="px-6 py-4">
                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600">
                                 {{ $g->mapel }}
                             </span>
-                        </td>
+                        </td> --}}
 
                         {{-- JK --}}
                         <td class="px-6 py-4 text-gray-600">

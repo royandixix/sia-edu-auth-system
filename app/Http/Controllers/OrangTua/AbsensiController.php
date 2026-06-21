@@ -10,27 +10,18 @@ class AbsensiController extends Controller
 {
     public function index()
     {
-        $userId = session('user_id');
+        $user = auth()->user();
 
-        // ambil orang tua + siswa
         $orangTua = OrangTua::with('siswa')
-            ->where('user_id', $userId)
+            ->where('user_id', $user->id)
             ->first();
 
         $siswa = $orangTua?->siswa;
 
-        $absensi = collect();
+        $absensi = $siswa
+            ? \App\Models\Absensi::where('siswa_id', $siswa->id)->latest()->get()
+            : collect();
 
-        if ($siswa) {
-            $absensi = Absensi::where('siswa_id', $siswa->id)
-                ->latest()
-                ->get();
-        }
-
-        return view('orangtua.absensi.index', [
-            'orangTua' => $orangTua,
-            'siswa' => $siswa,
-            'absensi' => $absensi,
-        ]);
+        return view('orangtua.absensi.index', compact('orangTua', 'siswa', 'absensi'));
     }
 }

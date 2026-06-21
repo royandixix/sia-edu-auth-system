@@ -9,22 +9,22 @@ class NilaiController extends Controller
 {
     public function index()
     {
-        $userId = session('user_id');
+        $user = auth()->user();
 
-        // ambil orang tua + siswa + nilai + mapel sekaligus
-        $orangTua = OrangTua::with(['siswa.nilai.mapel'])
-            ->where('user_id', $userId)
+        // ambil orang tua login
+        $orangTua = OrangTua::with('siswa.nilai.mapel')
+            ->where('user_id', $user->id)
             ->first();
 
-        $siswaAktif = $orangTua?->siswa;
+        // ambil siswa (1 orang tua = 1 siswa)
+        $siswa = $orangTua?->siswa;
 
-        $nilai = $siswaAktif
-            ? $siswaAktif->nilai
-            : collect();
+        // ambil nilai
+        $nilai = $siswa?->nilai ?? collect();
 
         return view('orangtua.nilai.index', compact(
             'orangTua',
-            'siswaAktif',
+            'siswa',
             'nilai'
         ));
     }

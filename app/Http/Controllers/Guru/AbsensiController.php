@@ -9,8 +9,15 @@ use App\Models\Siswa;
 
 class AbsensiController extends Controller
 {
+    public function __construct()
+    {
+        // 🔒 hanya guru yang bisa akses
+        $this->middleware('role:guru');
+    }
+
     public function index()
     {
+        // kalau nanti mau filter per guru bisa dikembangkan
         $absensi = Absensi::with('siswa')
             ->latest()
             ->paginate(10);
@@ -20,6 +27,7 @@ class AbsensiController extends Controller
 
     public function create()
     {
+        // 🔥 AMBIL SISWA SAJA (lebih aman pakai filter kelas nanti)
         $siswa = Siswa::orderBy('nama_siswa')->get();
 
         return view('guru.absensi.create', compact('siswa'));

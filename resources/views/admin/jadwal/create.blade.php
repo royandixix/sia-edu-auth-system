@@ -15,7 +15,7 @@
             <p class="text-sm text-gray-500">Isi jadwal pelajaran</p>
         </div>
 
-        <a href="{{ route('jadwal.index') }}"
+        <a href="{{ route('admin.jadwal.index') }}"
            class="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-sm font-medium">
             ← Kembali
         </a>

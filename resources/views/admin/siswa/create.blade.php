@@ -26,7 +26,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                {{-- NIS --}}
                 <div>
                     <label class="text-sm text-gray-600">NIS</label>
                     <input type="text" name="nis"
@@ -34,7 +33,6 @@
                         placeholder="Masukkan NIS">
                 </div>
 
-                {{-- Nama --}}
                 <div>
                     <label class="text-sm text-gray-600">Nama Lengkap</label>
                     <input type="text" name="nama_siswa"
@@ -42,7 +40,6 @@
                         placeholder="Masukkan nama lengkap">
                 </div>
 
-                {{-- JK --}}
                 <div>
                     <label class="text-sm text-gray-600">Jenis Kelamin</label>
                     <select name="jk"
@@ -53,7 +50,6 @@
                     </select>
                 </div>
 
-                {{-- Kelas --}}
                 <div>
                     <label class="text-sm text-gray-600">Kelas</label>
                     <select name="kelas_id"
@@ -65,7 +61,6 @@
                     </select>
                 </div>
 
-                {{-- Alamat --}}
                 <div class="md:col-span-2">
                     <label class="text-sm text-gray-600">Alamat</label>
                     <input type="text" name="alamat"
@@ -73,7 +68,6 @@
                         placeholder="Alamat lengkap">
                 </div>
 
-                {{-- Status --}}
                 <div>
                     <label class="text-sm text-gray-600">Status</label>
                     <select name="status"
@@ -83,9 +77,26 @@
                     </select>
                 </div>
 
+                {{-- 🔥 LOGIN SISWA --}}
+                <div>
+                    <label class="text-sm text-gray-600">Email Login</label>
+                    <input type="email" name="email"
+                        class="mt-1 w-full rounded-xl border border-gray-200 px-4 py-2.5"
+                        placeholder="Email untuk login">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="text-sm text-gray-600">Password Default</label>
+                    <input type="text" name="password"
+                        value="12345678"
+                        class="mt-1 w-full rounded-xl border border-gray-200 px-4 py-2.5">
+                    <small class="text-gray-400">Password default untuk login siswa</small>
+                </div>
+
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t">
+
                 <a href="{{ route('admin.siswa.index') }}"
                    class="px-4 py-2 border rounded-xl text-gray-600">
                     Batal
@@ -95,6 +106,7 @@
                     class="px-5 py-2 bg-indigo-600 text-white rounded-xl">
                     Simpan Data
                 </button>
+
             </div>
 
         </form>

@@ -11,18 +11,54 @@
             </svg>
         </button>
 
-        {{-- Breadcrumb style title --}}
+        {{-- TITLE --}}
         <div class="min-w-0">
-            <div class="flex items-center gap-1.5 text-xs text-gray-400 mb-0.5">
+
+            {{-- Breadcrumb --}}
+            <div class="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
+
+                {{-- Logo Mini --}}
+                <div class="w-5 h-5 rounded bg-indigo-500 flex items-center justify-center">
+                    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    </svg>
+                </div>
+
                 <span>SIAKAD</span>
+
                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"/>
                 </svg>
-                <span class="text-gray-600">@yield('page-sub', 'Dashboard')</span>
+
+                <span class="text-gray-600">
+                    @yield('page-sub', 'Dashboard')
+                </span>
+
             </div>
-            <div class="text-base font-semibold text-gray-900 truncate leading-tight">
-                @yield('page-title', 'Dashboard')
+
+            {{-- Page Title --}}
+            <div class="flex items-center gap-2 min-w-0">
+
+                <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M3 12l9-9 9 9M5 10v10h14V10"/>
+                    </svg>
+                </div>
+
+                <div class="text-base font-semibold text-gray-900 truncate leading-tight">
+                    @yield('page-title', 'Dashboard')
+                </div>
+
             </div>
+
         </div>
 
     </div>
@@ -36,41 +72,60 @@
                 <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/>
                 <path stroke-linecap="round" stroke-width="2" d="M16 2v4M8 2v4M3 10h18"/>
             </svg>
+
             {{ now()->translatedFormat('d M Y') }}
         </div>
 
-        {{-- NOTIF --}}
+        {{-- NOTIFICATION --}}
         <button class="relative w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors">
             <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
+
             <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
         </button>
 
         {{-- DIVIDER --}}
         <div class="w-px h-6 bg-gray-200 hidden sm:block"></div>
 
-        {{-- USER PILL --}}
+        {{-- USER --}}
         <div class="hidden sm:flex items-center gap-2 pl-1">
+
             <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-bold text-xs">
                 {{ strtoupper(substr(session('username','AD'),0,2)) }}
             </div>
+
             <div class="hidden md:block">
-                <div class="text-xs font-semibold text-gray-800 leading-tight">{{ session('username') ?? 'Admin' }}</div>
-                <div class="text-[10px] text-gray-400 leading-tight">Super Admin</div>
+                <div class="text-xs font-semibold text-gray-800 leading-tight">
+                    {{ session('username') ?? 'Admin' }}
+                </div>
+
+                <div class="text-[10px] text-gray-400 leading-tight">
+                    Super Admin
+                </div>
             </div>
+
         </div>
 
         {{-- LOGOUT --}}
         <a href="{{ route('logout') }}"
            class="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 hover:bg-red-50 hover:border-red-200 transition-colors group">
-            <svg class="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+
+            <svg class="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 viewBox="0 0 24 24">
+
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                 <polyline points="16 17 21 12 16 7"/>
                 <line x1="21" y1="12" x2="9" y2="12"/>
+
             </svg>
+
         </a>
 
     </div>
+
 </header>

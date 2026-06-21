@@ -8,13 +8,25 @@
         SIAKAD — @yield('page-title', 'Dashboard')
     </title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
 
+    <!-- TAILWIND -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- TABLER ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 
     <style>
         body{
             font-family:'Plus Jakarta Sans',sans-serif;
+        }
+
+        .ti{
+            font-size:18px;
+            line-height:1;
         }
     </style>
 
@@ -140,36 +152,24 @@ Swal.fire({
 
 {{-- GLOBAL DELETE CONFIRM --}}
 <script>
-
 function confirmDelete(form)
 {
     Swal.fire({
-
         title: 'Hapus Data?',
         text: 'Data yang sudah dihapus tidak dapat dikembalikan.',
-
         icon: 'warning',
-
         showCancelButton: true,
-
         confirmButtonColor: '#dc2626',
         cancelButtonColor: '#6b7280',
-
         confirmButtonText: 'Ya, Hapus',
         cancelButtonText: 'Batal',
-
         reverseButtons: true
-
     }).then((result) => {
-
-        if(result.isConfirmed)
-        {
+        if(result.isConfirmed){
             form.submit();
         }
-
     });
 }
-
 </script>
 
 </body>

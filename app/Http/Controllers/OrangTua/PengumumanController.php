@@ -9,7 +9,6 @@ class PengumumanController extends Controller
 {
     public function index()
     {
-        // AMBIL DATA DARI DATABASE
         $pengumuman = Pengumuman::latest()->get();
 
         return view('orangtua.pengumuman.index', compact('pengumuman'));

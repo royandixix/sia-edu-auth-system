@@ -14,33 +14,35 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // =========================
+        // TOTAL DATA
+        // =========================
         $totalSiswa = Siswa::count();
         $totalGuru = Guru::count();
         $totalKelas = Kelas::count();
         $totalMapel = MataPelajaran::count();
-
         $totalAbsensi = Absensi::count();
         $totalNilai = Nilai::count();
 
         // =========================
-        // RATA-RATA NILAI (FIXED)
+        // RATA-RATA NILAI (AMAN + CLEAN)
         // =========================
-        $rataNilaiPersen = Nilai::count()
-            ? round(
+        if ($totalNilai > 0) {
+            $rataNilaiPersen = round(
                 (
                     Nilai::sum('nilai_tugas') +
                     Nilai::sum('nilai_uts') +
                     Nilai::sum('nilai_uas')
-                ) / (Nilai::count() * 3),
-            2)
-            : 0;
+                ) / ($totalNilai * 3),
+            2);
+        } else {
+            $rataNilaiPersen = 0;
+        }
 
         // =========================
-        // KEHADIRAN (SIMPLE VERSION)
+        // KEHADIRAN (SIMPLE)
         // =========================
-        $persentaseKehadiran = Absensi::count()
-            ? 100
-            : 0;
+        $persentaseKehadiran = $totalAbsensi > 0 ? 100 : 0;
 
         return view('kepsek.dashboard.index', compact(
             'totalSiswa',

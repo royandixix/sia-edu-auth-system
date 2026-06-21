@@ -27,7 +27,7 @@
             <h2 class="text-lg font-semibold text-gray-900">Form Edit Jadwal</h2>
         </div>
 
-        <form action="{{ route('jadwal.update', $jadwal->id) }}" method="POST" class="p-6 space-y-6">
+        <form action="{{ route('admin.jadwal.update', $jadwal->id) }}" method="POST" class="p-6 space-y-6">
             @csrf
             @method('PUT')
 

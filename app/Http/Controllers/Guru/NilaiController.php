@@ -10,141 +10,136 @@ use Illuminate\Http\Request;
 
 class NilaiController extends Controller
 {
-    /**
-     * List Data Nilai
-     */
+    private function guruId()
+    {
+        return auth()->user()->guru->id ?? null;
+    }
+
+    private function checkGuru()
+    {
+        if (!$this->guruId()) {
+            abort(403, 'Guru belum terhubung dengan akun login');
+        }
+    }
+
     public function index()
     {
-        $nilai = Nilai::with([
-            'siswa',
-            'mapel'
-        ])
-        ->latest()
-        ->paginate(10);
+        $this->checkGuru();
 
-        return view(
-            'guru.nilai.index',
-            compact('nilai')
-        );
+        $nilai = Nilai::with(['siswa','mapel'])
+            ->where('guru_id', $this->guruId())
+            ->latest()
+            ->paginate(10);
+
+        return view('guru.nilai.index', compact('nilai'));
     }
 
-    /**
-     * Form Tambah Nilai
-     */
     public function create()
     {
-        $siswa = Siswa::orderBy('nama_siswa', 'asc')->get();
+        $this->checkGuru();
 
-        $mapel = MataPelajaran::orderBy('nama_mapel', 'asc')->get();
+        $guruId = $this->guruId();
 
-        return view(
-            'guru.nilai.create',
-            compact('siswa', 'mapel')
-        );
+        // 🔥 FIX UTAMA: mapel hanya milik guru login
+        $mapel = MataPelajaran::where('guru_id', $guruId)
+            ->orderBy('nama_mapel', 'asc')
+            ->get();
+
+        // siswa aktif saja (lebih aman)
+        $siswa = Siswa::where('status', 'aktif')
+            ->orderBy('nama_siswa', 'asc')
+            ->get();
+
+        return view('guru.nilai.create', compact('siswa','mapel'));
     }
 
-    /**
-     * Simpan Nilai
-     */
     public function store(Request $request)
     {
+        $this->checkGuru();
+
+        $guruId = $this->guruId();
+
         $request->validate([
-            'siswa_id'      => 'required|exists:siswa,id',
-            'mapel_id'      => 'required|exists:mata_pelajaran,id',
-            'nilai_tugas'   => 'required|integer|min:0|max:100',
-            'nilai_uts'     => 'required|integer|min:0|max:100',
-            'nilai_uas'     => 'required|integer|min:0|max:100',
+            'siswa_id' => 'required|exists:siswa,id',
+            'mapel_id' => 'required|exists:mata_pelajaran,id',
+            'nilai_tugas' => 'required|integer|min:0|max:100',
+            'nilai_uts' => 'required|integer|min:0|max:100',
+            'nilai_uas' => 'required|integer|min:0|max:100'
         ]);
 
         Nilai::create([
-            'siswa_id'      => $request->siswa_id,
-            'mapel_id'      => $request->mapel_id,
-            'nilai_tugas'   => $request->nilai_tugas,
-            'nilai_uts'     => $request->nilai_uts,
-            'nilai_uas'     => $request->nilai_uas,
+            'siswa_id' => $request->siswa_id,
+            'mapel_id' => $request->mapel_id,
+            'guru_id' => $guruId,
+            'nilai_tugas' => $request->nilai_tugas,
+            'nilai_uts' => $request->nilai_uts,
+            'nilai_uas' => $request->nilai_uas
         ]);
 
-        return redirect()
-            ->route('guru.nilai.index')
-            ->with('success', 'Nilai berhasil ditambahkan');
+        return redirect()->route('guru.nilai.index')
+            ->with('success','Nilai berhasil ditambahkan');
     }
 
-    /**
-     * Detail Nilai
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        $nilai = Nilai::with([
-            'siswa',
-            'mapel'
-        ])->findOrFail($id);
+        $this->checkGuru();
 
-        return view(
-            'guru.nilai.show',
-            compact('nilai')
-        );
+        $guruId = $this->guruId();
+
+        $nilai = Nilai::where('guru_id', $guruId)
+            ->findOrFail($id);
+
+        $mapel = MataPelajaran::where('guru_id', $guruId)
+            ->orderBy('nama_mapel', 'asc')
+            ->get();
+
+        $siswa = Siswa::where('status','aktif')
+            ->orderBy('nama_siswa','asc')
+            ->get();
+
+        return view('guru.nilai.edit', compact('nilai','mapel','siswa'));
     }
 
-    /**
-     * Form Edit Nilai
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        $nilai = Nilai::findOrFail($id);
+        $this->checkGuru();
 
-        $siswa = Siswa::orderBy('nama_siswa')->get();
+        $guruId = $this->guruId();
 
-        $mapel = MataPelajaran::orderBy('nama_mapel')->get();
-
-        return view(
-            'guru.nilai.edit',
-            compact(
-                'nilai',
-                'siswa',
-                'mapel'
-            )
-        );
-    }
-
-    /**
-     * Update Nilai
-     */
-    public function update(Request $request, string $id)
-    {
         $request->validate([
-            'siswa_id'      => 'required|exists:siswa,id',
-            'mapel_id'      => 'required|exists:mata_pelajaran,id',
-            'nilai_tugas'   => 'required|integer|min:0|max:100',
-            'nilai_uts'     => 'required|integer|min:0|max:100',
-            'nilai_uas'     => 'required|integer|min:0|max:100',
+            'siswa_id' => 'required|exists:siswa,id',
+            'mapel_id' => 'required|exists:mata_pelajaran,id',
+            'nilai_tugas' => 'required|integer|min:0|max:100',
+            'nilai_uts' => 'required|integer|min:0|max:100',
+            'nilai_uas' => 'required|integer|min:0|max:100'
         ]);
 
-        $nilai = Nilai::findOrFail($id);
+        $nilai = Nilai::where('guru_id', $guruId)
+            ->findOrFail($id);
 
         $nilai->update([
-            'siswa_id'      => $request->siswa_id,
-            'mapel_id'      => $request->mapel_id,
-            'nilai_tugas'   => $request->nilai_tugas,
-            'nilai_uts'     => $request->nilai_uts,
-            'nilai_uas'     => $request->nilai_uas,
+            'siswa_id' => $request->siswa_id,
+            'mapel_id' => $request->mapel_id,
+            'guru_id' => $guruId,
+            'nilai_tugas' => $request->nilai_tugas,
+            'nilai_uts' => $request->nilai_uts,
+            'nilai_uas' => $request->nilai_uas
         ]);
 
-        return redirect()
-            ->route('guru.nilai.index')
-            ->with('success', 'Nilai berhasil diperbarui');
+        return redirect()->route('guru.nilai.index')
+            ->with('success','Nilai berhasil diupdate');
     }
 
-    /**
-     * Hapus Nilai
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $nilai = Nilai::findOrFail($id);
+        $this->checkGuru();
+
+        $nilai = Nilai::where('guru_id', $this->guruId())
+            ->findOrFail($id);
 
         $nilai->delete();
 
-        return redirect()
-            ->route('guru.nilai.index')
-            ->with('success', 'Nilai berhasil dihapus');
+        return redirect()->route('guru.nilai.index')
+            ->with('success','Nilai berhasil dihapus');
     }
 }

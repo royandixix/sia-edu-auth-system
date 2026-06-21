@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Siswa;
 use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
 use App\Models\Siswa;
+use Illuminate\Support\Facades\Auth;
 
 class JadwalController extends Controller
 {
     public function index()
     {
-        $siswa = Siswa::where('user_id', session('user_id'))->first();
+        $siswa = Siswa::where('user_id', auth()->id())->first();
 
-        $jadwal = collect();
-
-        if ($siswa) {
-            $jadwal = Jadwal::with(['mapel','guru'])
+        $jadwal = $siswa
+            ? Jadwal::with(['mapel','guru'])
                 ->where('kelas_id', $siswa->kelas_id)
-                ->get();
-        }
+                ->get()
+            : collect();
 
         return view('siswa.jadwal.index', compact('siswa','jadwal'));
     }

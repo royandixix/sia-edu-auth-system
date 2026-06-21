@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Nilai;
+use App\Models\Jadwal;
+use App\Models\MataPelajaran;
 
 class Guru extends Model
 {
@@ -13,22 +16,27 @@ class Guru extends Model
         'nip',
         'nama_guru',
         'jk',
-        'mapel',
         'alamat',
         'user_id'
     ];
 
-    /**
-     * Relasi ke user (admin yang input data)
-     */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    // ❌ Dihapus sementara karena bentrok dengan kolom "mapel"
-    // public function mapel()
-    // {
-    //     return $this->hasMany(MataPelajaran::class);
-    // }
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'guru_id');
+    }
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'guru_id');
+    }
+
+    public function mataPelajaran()
+    {
+        return $this->hasMany(MataPelajaran::class, 'guru_id');
+    }
 }

@@ -53,10 +53,9 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth.session', 'role:admin'])
+    ->middleware(['auth', 'role:admin'])
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
         Route::resources([
             'siswa' => SiswaController::class,
             'guru' => GuruController::class,
@@ -72,10 +71,9 @@ Route::prefix('admin')
 
 Route::prefix('guru')
     ->name('guru.')
-    ->middleware(['auth.session', 'role:guru'])
+    ->middleware(['auth', 'role:guru'])
     ->group(function () {
         Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
-
         Route::resources([
             'absensi' => GuruAbsensiController::class,
             'nilai' => GuruNilaiController::class,
@@ -84,10 +82,9 @@ Route::prefix('guru')
 
 Route::prefix('siswa')
     ->name('siswa.')
-    ->middleware(['auth.session', 'role:siswa'])
+    ->middleware(['auth', 'role:siswa'])
     ->group(function () {
         Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->name('dashboard');
-
         Route::resources([
             'nilai' => SiswaNilaiController::class,
             'absensi' => SiswaAbsensiController::class,
@@ -98,10 +95,9 @@ Route::prefix('siswa')
 
 Route::prefix('orangtua')
     ->name('orangtua.')
-    ->middleware(['auth.session', 'role:orang_tua'])
+    ->middleware(['auth', 'role:orang_tua'])
     ->group(function () {
         Route::get('/dashboard', [OrangTuaDashboardController::class, 'index'])->name('dashboard');
-
         Route::resources([
             'nilai' => OrangTuaNilaiController::class,
             'absensi' => OrangTuaAbsensiController::class,
@@ -112,12 +108,14 @@ Route::prefix('orangtua')
 
 Route::prefix('kepsek')
     ->name('kepsek.')
-    ->middleware(['auth.session', 'role:kepsek'])
+    ->middleware(['auth', 'role:kepala_sekolah'])
     ->group(function () {
         Route::get('/dashboard', [KepsekDashboardController::class, 'index'])->name('dashboard');
-
-        Route::controller(LaporanController::class)->prefix('laporan')->name('laporan.')->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/cetak', 'cetak')->name('cetak');
-        });
+        Route::controller(LaporanController::class)
+            ->prefix('laporan')
+            ->name('laporan.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/cetak', 'cetak')->name('cetak');
+            });
     });

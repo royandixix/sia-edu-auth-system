@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Siswa;
+use App\Models\Guru;
 
 class Kelas extends Model
 {
@@ -15,10 +17,9 @@ class Kelas extends Model
 
     public function siswa()
     {
-        return $this->hasMany(Siswa::class);
+        return $this->hasMany(Siswa::class, 'kelas_id');
     }
 
-    // 🔥 RELASI WALI KELAS (GURU)
     public function wali()
     {
         return $this->belongsTo(Guru::class, 'wali_kelas');

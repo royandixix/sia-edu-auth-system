@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Guru; // ✅ INI YANG KURANG
+use App\Models\Guru;
+use App\Models\Nilai;
+use App\Models\Jadwal;
 
 class MataPelajaran extends Model
 {
@@ -18,6 +20,16 @@ class MataPelajaran extends Model
 
     public function guru()
     {
-        return $this->belongsTo(Guru::class);
+        return $this->belongsTo(Guru::class, 'guru_id');
+    }
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'mapel_id');
+    }
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'mapel_id');
     }
 }
