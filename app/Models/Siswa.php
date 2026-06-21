@@ -19,6 +19,16 @@ class Siswa extends Model
         'foto'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
+    }
+
     public function nilai()
     {
         return $this->hasMany(Nilai::class, 'siswa_id', 'id');
@@ -33,8 +43,4 @@ class Siswa extends Model
     {
         return $this->hasOne(OrangTua::class, 'siswa_id', 'id');
     }
-    public function kelas()
-{
-    return $this->belongsTo(Kelas::class, 'kelas_id');
-}
 }
